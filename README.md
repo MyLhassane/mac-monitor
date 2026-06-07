@@ -1,4 +1,4 @@
-# mac-monitor-groq
+# Mac Monitor
 
 macOS process monitor with AI-powered descriptions using Groq API (free).
 
@@ -46,7 +46,7 @@ When looking up a process description, the tool tries each source in order:
 
 4. **Run**:
    ```bash
-   python mac_monitor_groq.py
+   python mac_monitor.py
    ```
 
 ## Usage
@@ -61,7 +61,7 @@ When looking up a process description, the tool tries each source in order:
 
 ```
 mac-monitor-groq/
-├── mac_monitor_groq.py    # Entry point
+├── mac_monitor.py    # Entry point
 ├── modules/
 │   ├── __init__.py
 │   ├── config.py          # Settings, overrides, known classes
