@@ -1,1 +1,7 @@
-docs/.obsidiain
+docs/.obsidian
+__pycache__/
+.DS_Store
+.venv
+data/
+.env
+.vscode

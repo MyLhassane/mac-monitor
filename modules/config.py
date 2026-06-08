@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 class Config:
-    DB_DIR = Path.home() / ".mac-monitor-groq"
+    DB_DIR = Path(__file__).resolve().parent.parent / "data"
     DB_PATH = DB_DIR / "process_cache.db"
     GROQ_MODEL = "llama-3.1-8b-instant"
     GROQ_MAX_CONCURRENT = 5

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mac Monitor - مراقب الماك</title>
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:#0a0a0f;color:#e0e0e0;line-height:1.7;overflow-x:hidden
+}
+a{color:#6ecbf5;text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;height:auto}
+::selection{background:#6ecbf540;color:#fff}
+
+/* ===== LANG TOGGLE ===== */
+.lang-toggle{
+  position:fixed;top:16px;left:16px;z-index:100;
+  background:#1a1a2e;border:1px solid #2a2a4a;border-radius:24px;padding:4px;
+  display:flex;gap:2px
+}
+.lang-toggle button{
+  background:transparent;border:none;color:#888;padding:6px 14px;
+  border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;
+  transition:.2s
+}
+.lang-toggle button.active{background:#6ecbf5;color:#0a0a0f}
+.lang-toggle button:not(.active):hover{color:#ccc}
+[lang="ar"] .lang-en-only{display:none!important}
+[lang="en"] .lang-ar-only{display:none!important}
+[lang="en"]{direction:ltr}
+
+/* ===== HERO ===== */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:40px 20px;
+  background:linear-gradient(135deg,#0a0a0f 0%,#1a1a2e 50%,#16213e 100%);
+  position:relative;overflow:hidden
+}
+.hero::before{
+  content:'';position:absolute;width:600px;height:600px;
+  background:radial-gradient(circle,#6ecbf510 0%,transparent 70%);
+  top:-200px;right:-200px;pointer-events:none
+}
+.hero::after{
+  content:'';position:absolute;width:400px;height:400px;
+  background:radial-gradient(circle,#7c3aed10 0%,transparent 70%);
+  bottom:-100px;left:-100px;pointer-events:none
+}
+.logo{
+  width:80px;height:80px;background:linear-gradient(135deg,#6ecbf5,#7c3aed);
+  border-radius:20px;display:flex;align-items:center;justify-content:center;
+  font-size:36px;font-weight:800;margin-bottom:24px;box-shadow:0 8px 32px #6ecbf530;
+  position:relative;z-index:1
+}
+.hero h1{
+  font-size:clamp(2rem,6vw,4rem);font-weight:800;margin-bottom:12px;
+  background:linear-gradient(135deg,#fff,#6ecbf5);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1
+}
+.hero p{
+  font-size:clamp(1rem,2.2vw,1.25rem);color:#999;max-width:600px;
+  margin-bottom:32px;position:relative;z-index:1
+}
+.hero-badges{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+.badge{
+  background:#1a1a2e;border:1px solid #2a2a4a;border-radius:100px;
+  padding:8px 20px;font-size:13px;color:#aaa;display:flex;align-items:center;gap:6px
+}
+.badge svg{width:16px;height:16px;flex-shrink:0}
+.scroll-down{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+  color:#555;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  animation:bounce 2s infinite;z-index:1
+}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ===== SECTIONS ===== */
+.section{padding:clamp(48px,8vh,96px) 20px;max-width:900px;margin:0 auto}
+.section-alt{background:#0e0e18}
+.section-title{
+  font-size:clamp(1.3rem,3vw,2rem);font-weight:700;margin-bottom:40px;
+  display:flex;align-items:center;gap:12px
+}
+.section-title .icon{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.section-title .icon.blue{background:#6ecbf520;color:#6ecbf5}
+.section-title .icon.purple{background:#7c3aed20;color:#7c3aed}
+.section-title .icon.green{background:#22c55e20;color:#22c55e}
+.section-title .icon.orange{background:#f59e0b20;color:#f59e0b}
+
+/* ===== HOW IT WORKS ===== */
+.steps{display:flex;flex-direction:column;gap:16px}
+.step{
+  background:#111122;border:1px solid #1e1e3a;border-radius:16px;
+  padding:20px 24px;display:flex;align-items:flex-start;gap:16px;
+  transition:.2s
+}
+.step:hover{border-color:#6ecbf540;background:#141428}
+.step-num{
+  width:36px;height:36px;border-radius:50%;background:#6ecbf520;
+  color:#6ecbf5;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;flex-shrink:0;margin-top:2px
+}
+.step-content h3{font-size:16px;font-weight:600;margin-bottom:4px;color:#eee}
+.step-content p{font-size:14px;color:#888;line-height:1.6}
+
+/* ===== FEATURES ===== */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.feature-card{
+  background:#111122;border:1px solid #1e1e3a;border-radius:16px;
+  padding:24px;transition:.2s
+}
+.feature-card:hover{border-color:#6ecbf540;transform:translateY(-2px)}
+.feature-card .icon{
+  width:44px;height:44px;border-radius:12px;display:flex;
+  align-items:center;justify-content:center;font-size:20px;margin-bottom:12px
+}
+.feature-card h3{font-size:15px;font-weight:600;margin-bottom:6px;color:#eee}
+.feature-card p{font-size:13px;color:#888;line-height:1.6}
+
+/* ===== CHAIN ===== */
+.chain{display:flex;flex-direction:column;gap:6px;margin-top:20px}
+.chain-item{
+  display:flex;align-items:center;gap:12px;padding:10px 16px;
+  border-radius:10px;background:#111122;border:1px solid #1e1e3a;font-size:14px
+}
+.chain-step{
+  width:24px;height:24px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0
+}
+.chain-step.s1{background:#22c55e20;color:#22c55e}
+.chain-step.s2{background:#6ecbf520;color:#6ecbf5}
+.chain-step.s3{background:#7c3aed20;color:#7c3aed}
+.chain-step.s4{background:#f59e0b20;color:#f59e0b}
+.chain-item .tag{
+  font-size:11px;padding:2px 8px;border-radius:4px;margin-left:auto;flex-shrink:0
+}
+.tag.instant{background:#22c55e20;color:#22c55e}
+.tag.fast{background:#6ecbf520;color:#6ecbf5}
+.tag.slow{background:#f59e0b20;color:#f59e0b}
+
+/* ===== TERMINAL MOCK ===== */
+.term{
+  background:#0d0d1a;border:1px solid #1e1e3a;border-radius:12px;overflow:hidden;
+  margin-top:20px
+}
+.term-head{
+  background:#111128;padding:10px 16px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid #1e1e3a
+}
+.term-dot{width:10px;height:10px;border-radius:50%}
+.term-dot.r{background:#ff5f56}
+.term-dot.y{background:#ffbd2e}
+.term-dot.g{background:#27c93f}
+.term-body{padding:16px;font-family:"SF Mono","Fira Code","Courier New",monospace;font-size:12px;line-height:1.7;overflow-x:auto;color:#ccc}
+.term-body .gp{color:#6ecbf5}
+.term-body .sc{color:#22c55e}
+.term-body .er{color:#ff5f56}
+.term-body .hl{background:#6ecbf510;border-radius:2px;padding:0 4px}
+.term-body .dim{color:#555}
+
+/* ===== CTA ===== */
+.cta{
+  text-align:center;padding:clamp(48px,8vh,96px) 20px;
+  background:linear-gradient(135deg,#0a0a0f,#1a1a2e);
+  border-top:1px solid #1e1e3a
+}
+.cta h2{font-size:clamp(1.3rem,3vw,2rem);font-weight:700;margin-bottom:12px}
+.cta p{color:#888;max-width:500px;margin:0 auto 28px}
+.btn-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 28px;
+  border-radius:100px;font-size:15px;font-weight:600;border:none;cursor:pointer;
+  transition:.2s;text-decoration:none
+}
+.btn.primary{background:linear-gradient(135deg,#6ecbf5,#7c3aed);color:#fff}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px #6ecbf540}
+.btn.secondary{background:#1a1a2e;border:1px solid #2a2a4a;color:#ccc}
+.btn.secondary:hover{background:#222240;border-color:#6ecbf540}
+.btn .arrow{transition:.2s;display:inline-block}
+.btn:hover .arrow{transform:translateX(3px)}
+
+/* ===== FOOTER ===== */
+footer{
+  text-align:center;padding:32px 20px;color:#555;font-size:13px;
+  border-top:1px solid #1e1e3a
+}
+footer a{color:#777}
+footer a:hover{color:#6ecbf5}
+
+/* ===== SECTION DIVIDER ===== */
+.section-divider{
+  width:40px;height:3px;background:linear-gradient(90deg,#6ecbf5,#7c3aed);
+  border-radius:2px;margin-bottom:24px
+}
+
+/* ===== TERMINAL LTR OVERRIDE ===== */
+.term{direction:ltr!important;unicode-bidi:embed!important}
+.term *{direction:ltr!important;unicode-bidi:embed!important}
+[lang="ar"] .term-head span:last-child{margin-left:8px;margin-right:0}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  .hero h1{font-size:1.8rem}
+  .hero p{font-size:0.95rem}
+  .step{padding:16px;flex-direction:column;gap:8px}
+  .features{grid-template-columns:1fr}
+  .btn{padding:10px 20px;font-size:14px;width:100%}
+  .btn-group{flex-direction:column}
+  .section{padding:40px 16px}
+  .chain-item{font-size:13px}
+  .term-body{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LANG TOGGLE ===== -->
+<div class="lang-toggle" role="tablist">
+  <button onclick="setLang('en')" id="btn-en" class="active" role="tab">🇬🇧 EN</button>
+  <button onclick="setLang('ar')" id="btn-ar" role="tab">🇸🇦 AR</button>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="logo">MM</div>
+  <h1 lang="ar" class="lang-ar-only">مراقب الماك</h1>
+  <h1 lang="en" class="lang-en-only">Mac Monitor</h1>
+  <p lang="ar" class="lang-ar-only">
+    أداة بسيطة تعيش في الطرفية، تظهر لك كل العمليات اللي تشتغل في جهاز macOS<br>
+    وتشرحها لك بكلمات مفهومة — بدون ما تفتح Activity Monitor
+  </p>
+  <p lang="en" class="lang-en-only">
+    A simple terminal tool that shows every process running on your Mac<br>
+    and explains them in plain English — no need to open Activity Monitor
+  </p>
+  <div class="hero-badges">
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> 100% Free</span>
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 14,400 desc/day</span>
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12H4"/><path d="M12 4v16"/></svg> No credit card</span>
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> macOS</span>
+  </div>
+  <div class="scroll-down">↓</div>
+</section>
+
+<!-- ===== WHAT IS IT ===== -->
+<section class="section" id="about">
+  <div class="section-divider"></div>
+  <h2 class="section-title"><span class="icon blue">؟</span><span lang="ar" class="lang-ar-only">وش هالبرنامج؟</span><span lang="en" class="lang-en-only">What is this?</span></h2>
+
+  <div lang="ar" class="lang-ar-only" style="font-size:15px;color:#999;max-width:700px">
+    <p style="margin-bottom:16px">
+      <strong>Mac Monitor</strong> أداة سطر أوامر (CLI) بسيطة تسوي لقطة سريعة لكل العمليات اللي تشتغل بجهاز macOS،
+      تصنفها وتشرحها لك بكلمات واضحة، وتعطيك خيار توقف أي عملية تقيلة بنقرة.
+    </p>
+    <p style="margin-bottom:16px">
+      تستخدم ذكاء اصطناعي (AI) مجاني تماماً من Groq — يمديك تسأله 14,400 سؤال عن العمليات كل يوم بدون ما تدفع ريال.
+    </p>
+    <p style="margin-bottom:16px">
+      ولأننا نعتمد على "سلسلة احتياط" ذكية (Cache → Whatis → AI)، النتائج تجيك فوراً في الزيارة الثانية.
+    </p>
+  </div>
+  <div lang="en" class="lang-en-only" style="font-size:15px;color:#999;max-width:700px">
+    <p style="margin-bottom:16px">
+      <strong>Mac Monitor</strong> is a terminal tool that takes a snapshot of every running process on your Mac,
+      categorizes them, explains what each one does in plain English, and lets you kill any heavy process instantly.
+    </p>
+    <p style="margin-bottom:16px">
+      It uses a free AI (Groq) — you get 14,400 free descriptions per day, no credit card required.
+    </p>
+    <p style="margin-bottom:16px">
+      With its smart fallback chain (Cache → Whatis → AI), descriptions appear instantly on the second run.
+    </p>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section section-alt" id="how">
+  <div class="section-divider"></div>
+  <h2 class="section-title"><span class="icon purple">⚡</span><span lang="ar" class="lang-ar-only">كيف يشتغل؟</span><span lang="en" class="lang-en-only">How it works</span></h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3 lang="ar" class="lang-ar-only">نصب واشترك مجاناً</h3>
+        <h3 lang="en" class="lang-en-only">Install & get a free key</h3>
+        <p lang="ar" class="lang-ar-only">نصب Python والمكتبات، افتح حساب في Groq، وخذ مفتاح API مجاني بدون بطاقة ائتمان.</p>
+        <p lang="en" class="lang-en-only">Install Python dependencies, create a free Groq account, and get your API key — no credit card needed.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3 lang="ar" class="lang-ar-only">شغل الأمر</h3>
+        <h3 lang="en" class="lang-en-only">Run the command</h3>
+        <p lang="ar" class="lang-ar-only">شغل <code>python mac_monitor_groq.py</code>، بتظهر لك لقطة فورية لكل العمليات.</p>
+        <p lang="en" class="lang-en-only">Run <code>python mac_monitor_groq.py</code> and see an instant snapshot of every process.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3 lang="ar" class="lang-ar-only">فهم وشوف اللي يستهلك</h3>
+        <h3 lang="en" class="lang-en-only">See what's eating your CPU</h3>
+        <p lang="ar" class="lang-ar-only">الجدول مقسم ٣ أقسام: البرامج الآمنة (🟢)، خدمات الخلفية (🟡)، والنواة (🔴). الأوصاف تتعبأ في الخلفية.</p>
+        <p lang="en" class="lang-en-only">Processes are sorted into 3 sections: safe apps (🟢), background services (🟡), system core (🔴). Descriptions fill in live.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3 lang="ar" class="lang-ar-only">أوقف اللي تبغى</h3>
+        <h3 lang="en" class="lang-en-only">Kill what you want</h3>
+        <p lang="ar" class="lang-ar-only">اكتب رقم العملية وضغط Enter. التطبيقات فقط القابلة للإيقاف. النواة محمية.</p>
+        <p lang="en" class="lang-en-only">Type a process number and hit Enter. Only apps and services — system core processes are protected.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section" id="features">
+  <div class="section-divider"></div>
+  <h2 class="section-title"><span class="icon green">★</span><span lang="ar" class="lang-ar-only">المميزات</span><span lang="en" class="lang-en-only">Features</span></h2>
+  <div class="features">
+    <div class="feature-card">
+      <div class="icon" style="background:#6ecbf520;color:#6ecbf5">🧠</div>
+      <h3 lang="ar" class="lang-ar-only">ذكاء اصطناعي يفهمك</h3>
+      <h3 lang="en" class="lang-en-only">AI that explains</h3>
+      <p lang="ar" class="lang-ar-only">بدل ما تشوف <code>WindowServer</code> وتحترنا، AI يشرحها: "إدارة عرض واجهة macOS"</p>
+      <p lang="en" class="lang-en-only">Instead of seeing a cryptic <code>WindowServer</code>, AI tells you: "Manages macOS graphical user interface rendering."</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon" style="background:#7c3aed20;color:#7c3aed">💰</div>
+      <h3 lang="ar" class="lang-ar-only">مجاني بالكامل</h3>
+      <h3 lang="en" class="lang-en-only">100% free</h3>
+      <p lang="ar" class="lang-ar-only">API مجاني من Groq: 14,400 وصف في اليوم. بدون بطاقة، بدون فواتير، بدون حدود مخفية.</p>
+      <p lang="en" class="lang-en-only">Groq free API: 14,400 descriptions per day. No credit card, no billing, no hidden limits.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon" style="background:#22c55e20;color:#22c55e">⚡</div>
+      <h3 lang="ar" class="lang-ar-only">فوري + احتياطي</h3>
+      <h3 lang="en" class="lang-en-only">Instant + fallback</h3>
+      <p lang="ar" class="lang-ar-only">يعرض اللقطة فوراً. الأوصاف تتعبأ بالخلفية. سلسلة احتياط 6 مستويات لو انقطع النت.</p>
+      <p lang="en" class="lang-en-only">Shows the snapshot instantly. Descriptions load in background. 6-level fallback chain if offline.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon" style="background:#f59e0b20;color:#f59e0b">🔒</div>
+      <h3 lang="ar" class="lang-ar-only">حماية ذكية</h3>
+      <h3 lang="en" class="lang-en-only">Smart protection</h3>
+      <p lang="ar" class="lang-ar-only">يقسم العمليات لـ 3 فئات. فقط الخضراء والصفراء تقدر توقفها. الحمراء محمية ولا يمكن قتلها.</p>
+      <p lang="en" class="lang-en-only">3 categories. Only green and yellow can be killed. Red (system core) is protected.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RESOLUTION CHAIN ===== -->
+<section class="section section-alt" id="chain">
+  <div class="section-divider"></div>
+  <h2 class="section-title"><span class="icon orange">🛡️</span><span lang="ar" class="lang-ar-only">سلسلة الاحتياط (فشل ← جرب اللي بعده)</span><span lang="en" class="lang-en-only">Fallback chain (fail → try next)</span></h2>
+  <div lang="ar" class="lang-ar-only" style="color:#888;font-size:14px;margin-top:-24px;margin-bottom:16px">
+    ما يعتمد على مصدر واحد. لو انقطع الإنترنت أو تعطلت API، يشتغل بدون نت:
+  </div>
+  <div lang="en" class="lang-en-only" style="color:#888;font-size:14px;margin-top:-24px;margin-bottom:16px">
+    Never depends on a single source. If the internet drops or the API fails, it still works offline:
+  </div>
+  <div class="chain">
+    <div class="chain-item">
+      <span class="chain-step s1">1</span>
+      <span lang="ar" class="lang-ar-only">SQLite Cache — أوصاف محفوظة من الجلسات السابقة</span>
+      <span lang="en" class="lang-en-only">SQLite Cache — saved from previous sessions</span>
+      <span class="tag instant" lang="ar">فوري</span>
+      <span class="tag instant" lang="en">instant</span>
+    </div>
+    <div class="chain-item">
+      <span class="chain-step s1">2</span>
+      <span lang="ar" class="lang-ar-only">Hardcoded Overrides — أسماء معروفة مسبقاً (VS Code, opencode...)</span>
+      <span lang="en" class="lang-en-only">Hardcoded Overrides — known names (VS Code, opencode...)</span>
+      <span class="tag instant" lang="ar">فوري</span>
+      <span class="tag instant" lang="en">instant</span>
+    </div>
+    <div class="chain-item">
+      <span class="chain-step s1">3</span>
+      <span lang="ar" class="lang-ar-only">Path Extraction — اسم التطبيق من مسار التثبيت</span>
+      <span lang="en" class="lang-en-only">Path Extraction — app name from install path</span>
+      <span class="tag instant" lang="ar">فوري</span>
+      <span class="tag instant" lang="en">instant</span>
+    </div>
+    <div class="chain-item">
+      <span class="chain-step s2">4</span>
+      <span lang="ar" class="lang-ar-only">Whatis — دليل macOS المدمج (لخدمات النظام)</span>
+      <span lang="en" class="lang-en-only">Whatis — macOS built-in manual (for system daemons)</span>
+      <span class="tag fast" lang="ar">سريع</span>
+      <span class="tag fast" lang="en">fast</span>
+    </div>
+    <div class="chain-item">
+      <span class="chain-step s3">5</span>
+      <span lang="ar" class="lang-ar-only">Groq AI — ذكاء اصطناعي سحابي مجاني (14,400 وصف/يوم)</span>
+      <span lang="en" class="lang-en-only">Groq AI — free cloud AI (14,400 descriptions/day)</span>
+      <span class="tag fast" lang="ar">إنترنت</span>
+      <span class="tag fast" lang="en">online</span>
+    </div>
+    <div class="chain-item">
+      <span class="chain-step s4">6</span>
+      <span lang="ar" class="lang-ar-only">Generic Fallback — وصف عام: "macOS process: {name}"</span>
+      <span lang="en" class="lang-en-only">Generic Fallback — "macOS process: {name}"</span>
+      <span class="tag slow" lang="ar">آخر ملاذ</span>
+      <span class="tag slow" lang="en">last resort</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCREENSHOT ===== -->
+<section class="section" id="screenshot">
+  <div class="section-divider"></div>
+  <h2 class="section-title"><span class="icon blue">🖥️</span><span lang="ar" class="lang-ar-only">شكله كذا</span><span lang="en" class="lang-en-only">What it looks like</span></h2>
+  <div class="term" dir="ltr">
+    <div class="term-head">
+      <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+      <span style="font-size:11px;color:#555;margin-left:8px">mac-monitor-groq — python mac_monitor_groq.py</span>
+    </div>
+    <div class="term-body">
+<span class="gp">$</span> python mac_monitor_groq.py<br>
+<span class="sc">☑</span> 483 processes captured<br>
+<br>
+<span class="sc">🟢 [SECTION 1] USER APPLICATIONS (Safe to Terminate)</span><br>
+   ID    PID     CPU%   MEM%   Process Name                     Description<br>
+   ----------------------------------------------------------------------------------------------------------------<br>
+   [1]   73600   61.4   0.5    Python                            <span class="hl">High-level interpreted programming language.</span><br>
+   [2]   77094   13.6   1.4    opencode                          <span class="hl">AI-powered CLI coding assistant.</span><br>
+   [3]   67093   9.4    5.2    Code Helper (Renderer)            <span class="hl">VS Code renderer process.</span><br>
+   [4]   436     2.2    0.5    Finder                            <span class="hl">File system management interface.</span><br>
+   [5]   73588   0.1    1.3    Code                              <span class="hl">Active component of Visual Studio Code</span><br>
+   ...<br>
+<br>
+<span class="dim"> ⏳ Resolving descriptions in background (Groq AI) ... 358 remaining</span><br>
+<br>
+<span class="gp">Action &gt;&gt;</span> <span class="sc">5</span><br>
+<span class="er">⚠️ Terminate Code (PID: 73588)? (y/n):</span> y<br>
+<span class="sc">✅ Code terminated.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUICK START ===== -->
+<section class="section section-alt" id="start">
+  <div class="section-divider"></div>
+  <h2 class="section-title"><span class="icon green">🚀</span><span lang="ar" class="lang-ar-only">شغله الآن (٣ خطوات)</span><span lang="en" class="lang-en-only">Quick start (3 steps)</span></h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3 lang="ar" class="lang-ar-only">خذ مفتاح API مجاني</h3>
+        <h3 lang="en" class="lang-en-only">Get a free API key</h3>
+        <p lang="ar" class="lang-ar-only">افتح <a href="https://console.groq.com" target="_blank">console.groq.com</a>، سجل بحساب Google أو GitHub، وانسخ المفتاح.</p>
+        <p lang="en" class="lang-en-only">Go to <a href="https://console.groq.com" target="_blank">console.groq.com</a>, sign in with Google/GitHub, copy your key.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3 lang="ar" class="lang-ar-only">نصب وشغل</h3>
+        <h3 lang="en" class="lang-en-only">Install & run</h3>
+        <div class="term" dir="ltr" style="margin-top:8px">
+          <div class="term-head">
+            <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+          </div>
+          <div class="term-body" style="font-size:11px">
+<span class="gp">$</span> cd mac-monitor<br>
+<span class="gp">$</span> python3 -m venv .venv<br>
+<span class="gp">$</span> .venv/bin/pip install -r requirements.txt<br>
+<span class="gp">$</span> echo 'GROQ_API_KEY=gsk_your_key' &gt; .env<br>
+<span class="gp">$</span> .venv/bin/python3 mac_monitor.py<br>
+<span class="sc">☑</span> 483 processes captured<br>
+<span class="sc">🟢 [SECTION 1] USER APPLICATIONS</span>  ...
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3 lang="ar" class="lang-ar-only">خلص 😎</h3>
+        <h3 lang="en" class="lang-en-only">Done 😎</h3>
+        <p lang="ar" class="lang-ar-only">خلي الأداة تشتغل. بتشوف العمليات بتتعبأ بالأوصاف قدام عينك. اكتب رقم العملية اللي تبغا توقفها.</p>
+        <p lang="en" class="lang-en-only">Let it run. Watch descriptions fill in live. Type a number to kill a process.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta">
+  <h2 lang="ar" class="lang-ar-only">جهز تطلب؟ جربه الحين</h2>
+  <h2 lang="en" class="lang-en-only">Ready to try it?</h2>
+  <p lang="ar" class="lang-ar-only">مشروع مفتوح المصدر، سطر واحد للتشغيل، وآلاف الأوصاف المجانية كل يوم.</p>
+  <p lang="en" class="lang-en-only">Open source, one command to run, thousands of free AI descriptions every day.</p>
+  <div class="btn-group">
+    <a class="btn primary" href="https://github.com/MyLhassane/mac-monitor" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+      <span class="arrow">→</span>
+    </a>
+    <a class="btn secondary" href="#start">
+      <span lang="ar" class="lang-ar-only">طريقة التشغيل</span>
+      <span lang="en" class="lang-en-only">Quick start guide</span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="btn secondary" href="docs/">
+      <span lang="ar" class="lang-ar-only">الوثائق الفنية</span>
+      <span lang="en" class="lang-en-only">Documentation</span>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <p lang="ar" class="lang-ar-only">مشروع مفتوح المصدر — صنع بحب 🫡</p>
+  <p lang="en" class="lang-en-only">Open source — made with 🫡</p>
+</footer>
+
+<script>
+function setLang(lang){
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  document.getElementById('btn-ar').classList.toggle('active',lang==='ar');
+  localStorage.setItem('mac-monitor-lang',lang);
+}
+(function(){
+  const saved=localStorage.getItem('mac-monitor-lang');
+  if(saved==='ar')setLang('ar');else setLang('en');
+})();
+</script>
+</body>
+</html>
