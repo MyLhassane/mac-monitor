@@ -43,36 +43,41 @@
   .sidebar-toggle span { background: #fff; }
   .sidebar-toggle:hover { background: #5ab8e8; }
 
-  /* ===== language toggle (fixed, outside Docsify) ===== */
-  .docs-lang-toggle {
-    position: fixed; top: 12px; left: 60px; z-index: 999;
-    background: #fff; border: 1px solid #ddd; border-radius: 20px;
-    padding: 3px; display: flex; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  /* ===== Sidebar top bar (language toggle + back) ===== */
+  .sidebar-top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px; border-bottom: 1px solid #eee;
   }
-  .docs-lang-toggle a {
-    font-size: 12px; padding: 4px 12px; border-radius: 16px;
+  .sidebar-lang-toggle {
+    display: flex; gap: 2px; background: #f0f0f0; border-radius: 16px; padding: 2px;
+  }
+  .sidebar-lang-toggle a {
+    font-size: 11px; padding: 3px 10px; border-radius: 14px;
     text-decoration: none; color: #888; font-weight: 600; cursor: pointer;
   }
-  .docs-lang-toggle a:hover { color: #333; }
-  .docs-lang-toggle a.active { background: #6ecbf5; color: #fff; }
-
-  /* ===== back-to-main ===== */
-  .docs-back {
-    position: fixed; top: 14px; right: 60px; z-index: 999;
-    font-size: 13px; color: #888; text-decoration: none; font-weight: 500;
+  .sidebar-lang-toggle a:hover { color: #333; }
+  .sidebar-lang-toggle a.active { background: #6ecbf5; color: #fff; }
+  .sidebar-back {
+    font-size: 12px; color: #888; text-decoration: none; font-weight: 500; white-space: nowrap;
   }
-  .docs-back:hover { color: #6ecbf5; }
+  .sidebar-back:hover { color: #6ecbf5; }
+  [dir="rtl"] .sidebar-back { white-space: nowrap; }
 
-  /* ===== RTL ===== */
-  [dir="rtl"] .docs-lang-toggle { left: auto; right: 60px; }
-  [dir="rtl"] .docs-back { right: auto; left: 60px; }
+  /* ===== RTL sidebar fixes ===== */
+  [dir="rtl"] .sidebar-nav { margin-right: 10px; }
+  [dir="rtl"] body.close .sidebar {
+    transform: translateX(300px) !important;
+  }
+  [dir="rtl"] body.close section.content {
+    right: 0 !important;
+  }
   [dir="rtl"] .sidebar {
     left: auto; right: 0; direction: rtl;
   }
   [dir="rtl"] .sidebar ul li.active > a {
     border-right: none; border-left: 2px solid var(--theme-color);
   }
-  [dir="rtl"] .sidebar-toggle { left: auto; right: 0; }
+  [dir="rtl"] .sidebar-toggle { left: auto; right: 0; border-radius: 6px 0 0 6px; }
   [dir="rtl"] section.content {
     left: auto; right: 300px;
   }
@@ -92,23 +97,20 @@
 
   @media (max-width: 768px) {
     .sidebar { z-index: 200; }
-    .docs-lang-toggle { top: 8px; left: 56px; }
-    .docs-lang-toggle a { font-size: 11px; padding: 3px 8px; }
-    .docs-back { top: 10px; right: 12px; font-size: 12px; }
-    [dir="rtl"] .docs-back { right: auto; left: 12px; }
-    [dir="rtl"] .sidebar-toggle { left: auto; right: 0; }
+    .sidebar-toggle { z-index: 300; }
+    body.close .sidebar-toggle { background: #6ecbf5; }
+    [dir="rtl"] .sidebar {
+      transform: translateX(300px);
+    }
+    [dir="rtl"] body.close .sidebar {
+      transform: translateX(0) !important;
+    }
+  [dir="rtl"] .sidebar-toggle { left: auto; right: 0; border-radius: 6px 0 0 6px; }
   }
 </style>
 </head>
 <body>
 <div id="app"></div>
-
-<div class="docs-lang-toggle">
-  <a id="dl-en" href="#" onclick="switchLang('en');return false;">EN</a>
-  <a id="dl-ar" href="#" onclick="switchLang('ar');return false;">AR</a>
-</div>
-
-<a class="docs-back" href="#" onclick="goHome();return false;">← Back</a>
 
 <script>
   var currentLang = (function() {
@@ -133,8 +135,6 @@
   (function() {
     document.documentElement.lang = currentLang;
     document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-    document.getElementById('dl-en').classList.toggle('active', currentLang === 'en');
-    document.getElementById('dl-ar').classList.toggle('active', currentLang === 'ar');
 
     window.$docsify = {
       name: 'Mac Monitor',
@@ -153,6 +153,45 @@
         noData: 'No results!',
         depth: 3,
       },
+      plugins: [
+        function(hook, vm) {
+          hook.doneEach(function() {
+            var sidebar = document.querySelector('.sidebar');
+            if (!sidebar) return;
+
+            var existing = sidebar.querySelector('.sidebar-top-bar');
+            if (existing) existing.remove();
+
+            var search = sidebar.querySelector('.search');
+            var appName = sidebar.querySelector('h1.app-name');
+            if (!search || !appName) return;
+
+            var isAr = document.documentElement.dir === 'rtl';
+
+            var topBar = document.createElement('div');
+            topBar.className = 'sidebar-top-bar';
+
+            var langToggle = document.createElement('div');
+            langToggle.className = 'sidebar-lang-toggle';
+            langToggle.innerHTML =
+              '<a href="#" onclick="switchLang(\'en\');return false;"' +
+              (isAr ? '' : ' class="active"') + '>EN</a>' +
+              '<a href="#" onclick="switchLang(\'ar\');return false;"' +
+              (isAr ? ' class="active"' : '') + '>AR</a>';
+
+            var backBtn = document.createElement('a');
+            backBtn.href = '#';
+            backBtn.className = 'sidebar-back';
+            backBtn.onclick = function() { goHome(); return false; };
+            backBtn.textContent = isAr ? '\u2192 \u0639\u0648\u062f\u0629' : '\u2190 Back';
+
+            topBar.appendChild(backBtn);
+            topBar.appendChild(langToggle);
+
+            sidebar.insertBefore(topBar, appName);
+          });
+        }
+      ]
     };
   })();
 </script>
