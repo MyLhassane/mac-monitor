@@ -66,6 +66,20 @@
   /* ===== RTL ===== */
   [dir="rtl"] .docs-lang-toggle { left: auto; right: 60px; }
   [dir="rtl"] .docs-back { right: auto; left: 60px; }
+  [dir="rtl"] .sidebar {
+    left: auto; right: 0; direction: rtl;
+  }
+  [dir="rtl"] .sidebar ul li.active > a {
+    border-right: none; border-left: 2px solid var(--theme-color);
+  }
+  [dir="rtl"] .sidebar-toggle { left: auto; right: 0; }
+  [dir="rtl"] section.content {
+    left: auto; right: 300px;
+  }
+  [dir="rtl"] .github-corner {
+    right: auto; left: 0;
+  }
+  [dir="rtl"] .github-corner svg { transform: scaleX(-1); }
   [dir="rtl"] .markdown-section { direction: rtl; text-align: right; }
   [dir="rtl"] .markdown-section code,
   [dir="rtl"] .markdown-section pre,
@@ -75,8 +89,6 @@
     text-align: left !important;
     unicode-bidi: embed;
   }
-  [dir="rtl"] .sidebar { direction: rtl; }
-  [dir="rtl"] .sidebar ul li.active > a { border-right: none; border-left: 2px solid var(--theme-color); }
 
   @media (max-width: 768px) {
     .sidebar { z-index: 200; }
@@ -84,6 +96,7 @@
     .docs-lang-toggle a { font-size: 11px; padding: 3px 8px; }
     .docs-back { top: 10px; right: 12px; font-size: 12px; }
     [dir="rtl"] .docs-back { right: auto; left: 12px; }
+    [dir="rtl"] .sidebar-toggle { left: auto; right: 0; }
   }
 </style>
 </head>
