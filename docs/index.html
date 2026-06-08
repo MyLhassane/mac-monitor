@@ -95,14 +95,33 @@
     right: auto; left: 0;
   }
   [dir="rtl"] .github-corner svg { transform: scaleX(-1); }
-  [dir="rtl"] .markdown-section { direction: rtl; text-align: right; }
+  [dir="rtl"] .markdown-section {
+    direction: rtl; text-align: right;
+    font-family: "Noto Naskh Arabic", "Tajawal", "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  [dir="rtl"] .markdown-section code {
+    font-size: 0.85rem !important;
+    line-height: 1.8 !important;
+  }
+  [dir="rtl"] .markdown-section pre code {
+    font-size: 0.82rem !important;
+    line-height: 1.7 !important;
+  }
   [dir="rtl"] .markdown-section code,
-  [dir="rtl"] .markdown-section pre,
-  [dir="rtl"] .markdown-section pre code,
+  [dir="rtl"] .markdown-section pre:not([data-lang="ar"]),
+  [dir="rtl"] .markdown-section pre:not([data-lang="ar"]) code,
   [dir="rtl"] .markdown-section tt {
     direction: ltr !important;
     text-align: left !important;
     unicode-bidi: embed;
+  }
+  [dir="rtl"] .markdown-section pre[data-lang="ar"],
+  [dir="rtl"] .markdown-section pre[data-lang="ar"] code {
+    direction: rtl !important;
+    text-align: right !important;
+  }
+  .markdown-section pre[data-lang="ar"]::after {
+    display: none !important;
   }
 
   @media (max-width: 768px) {
