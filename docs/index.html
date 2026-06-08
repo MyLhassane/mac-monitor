@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mac Monitor — Documentation</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/themes/vue.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
 <style>
   :root {
     --theme-color: #6ecbf5;
@@ -24,26 +24,18 @@
   .markdown-section code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
   .markdown-section pre { background: #f6f8fa; border-radius: 6px; }
   .markdown-section pre code { background: transparent; }
-  .markdown-section table { display: table; width: 100%; }
+  .markdown-section .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .markdown-section table { width: 100%; }
   .markdown-section th, .markdown-section td { padding: 10px 14px; }
+  @media (max-width: 768px) {
+    .markdown-section .table-wrapper { margin: 0 -16px; }
+    .markdown-section table { white-space: nowrap; }
+  }
   .markdown-section blockquote { color: #666; border-left: 4px solid var(--theme-color); }
   .app-name-link { font-weight: 700; font-size: 1.2rem; color: #333 !important; }
   .sidebar-nav { margin-top: 0; }
   .sidebar > h1 { text-align: center; margin: 0; }
 
-  /* ===== language toggle in sidebar ===== */
-  .lang-switch {
-    display: flex; gap: 4px; justify-content: center;
-    padding: 12px 15px 4px; border-bottom: 1px solid #eee;
-  }
-  .lang-switch a {
-    font-size: 12px; padding: 3px 10px; border-radius: 12px;
-    text-decoration: none; color: #888; font-weight: 600;
-  }
-  .lang-switch a.active { background: #6ecbf5; color: #fff; }
-  .lang-switch a:hover:not(.active) { color: #333; }
-
-  /* ===== sidebar hamburger ===== */
   .sidebar-toggle {
     background: #6ecbf5; border-radius: 0 6px 6px 0;
     padding: 10px 12px; z-index: 100;
@@ -51,44 +43,100 @@
   .sidebar-toggle span { background: #fff; }
   .sidebar-toggle:hover { background: #5ab8e8; }
 
+  /* ===== language toggle (fixed, outside Docsify) ===== */
+  .docs-lang-toggle {
+    position: fixed; top: 12px; left: 60px; z-index: 999;
+    background: #fff; border: 1px solid #ddd; border-radius: 20px;
+    padding: 3px; display: flex; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .docs-lang-toggle a {
+    font-size: 12px; padding: 4px 12px; border-radius: 16px;
+    text-decoration: none; color: #888; font-weight: 600; cursor: pointer;
+  }
+  .docs-lang-toggle a:hover { color: #333; }
+  .docs-lang-toggle a.active { background: #6ecbf5; color: #fff; }
+
+  /* ===== back-to-main ===== */
+  .docs-back {
+    position: fixed; top: 14px; right: 60px; z-index: 999;
+    font-size: 13px; color: #888; text-decoration: none; font-weight: 500;
+  }
+  .docs-back:hover { color: #6ecbf5; }
+
   /* ===== RTL ===== */
+  [dir="rtl"] .docs-lang-toggle { left: auto; right: 60px; }
+  [dir="rtl"] .docs-back { right: auto; left: 60px; }
   [dir="rtl"] .markdown-section { direction: rtl; text-align: right; }
   [dir="rtl"] .sidebar { direction: rtl; }
   [dir="rtl"] .sidebar ul li.active > a { border-right: none; border-left: 2px solid var(--theme-color); }
 
-  /* ===== mobile ===== */
   @media (max-width: 768px) {
     .sidebar { z-index: 200; }
+    .docs-lang-toggle { top: 8px; left: 56px; }
+    .docs-lang-toggle a { font-size: 11px; padding: 3px 8px; }
+    .docs-back { top: 10px; right: 12px; font-size: 12px; }
+    [dir="rtl"] .docs-back { right: auto; left: 12px; }
   }
 </style>
 </head>
 <body>
 <div id="app"></div>
 
+<div class="docs-lang-toggle">
+  <a id="dl-en" href="#" onclick="switchLang('en');return false;">EN</a>
+  <a id="dl-ar" href="#" onclick="switchLang('ar');return false;">AR</a>
+</div>
+
+<a class="docs-back" href="#" onclick="goHome();return false;">← Back</a>
+
 <script>
-  (function() {
-    var params = new URLSearchParams(window.location.search);
-    var saved = localStorage.getItem('mm-docs-lang');
-    var lang = params.get('lang') || saved || 'en';
+  var currentLang = (function() {
+    var p = new URLSearchParams(window.location.search);
+    return p.get('lang') || localStorage.getItem('mm-docs-lang') || 'en';
+  })();
+
+  function switchLang(lang) {
     localStorage.setItem('mm-docs-lang', lang);
+    if (lang !== currentLang) {
+      var url = window.location.pathname + '?lang=' + lang + window.location.hash;
+      window.location.href = url;
+    }
+  }
+
+  function goHome() {
+    var depth = window.location.pathname.replace(/\/+$/, '').split('/').length - 1;
+    var up = '../'.repeat(Math.max(depth - 1, 0)) || './';
+    window.location.href = up + 'index.html';
+  }
+
+  (function() {
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    document.getElementById('dl-en').classList.toggle('active', currentLang === 'en');
+    document.getElementById('dl-ar').classList.toggle('active', currentLang === 'ar');
 
     window.$docsify = {
       name: 'Mac Monitor',
       repo: 'https://github.com/MyLhassane/mac-monitor',
-      basePath: lang === 'ar' ? 'ar/' : 'en/',
+      basePath: currentLang === 'ar' ? 'ar/' : 'en/',
       loadSidebar: true,
       loadNavbar: false,
       coverpage: false,
       autoHeader: false,
       maxLevel: 3,
       subMaxLevel: 2,
-      search: 'auto',
-      formatUpdated: '{YYYY-MM-DD}',
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: 'Search docs...',
+        noData: 'No results!',
+        depth: 3,
+      },
     };
   })();
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/docsify.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/plugins/search.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
 </body>
 </html>

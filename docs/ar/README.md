@@ -1,14 +1,27 @@
 # توثيق Mac Monitor
 
-> الوثائق العربية قيد الترجمة. المحتوى الإنجليزي معروض مؤقتاً.
+> أداة مراقبة عمليات macOS مع أوصاف مدعومة بـ AI، تصنيف ذكي، وسلسلة احتياط من 6 مستويات.
 
 ## روابط سريعة
 
-- [البنية المعمارية](../en/01-architecture.md)
-- [التقاط وتصنيف العمليات](../en/02-snapshot-classification.md)
-- [سلسلة الاحتياط للأوصاف](../en/03-description-resolution-chain.md)
-- [تكامل Groq AI](../en/04-groq-ai-integration.md)
-- [نظام التخزين المؤقت SQLite](../en/05-sqlite-caching-system.md)
-- [واجهة الطرفية](../en/06-terminal-ui.md)
-- [دليل الإعدادات](../en/07-configuration-guide.md)
+- [البنية المعمارية](01-architecture.md)
+- [التقاط وتصنيف العمليات](02-snapshot-classification.md)
+- [سلسلة الاحتياط للأوصاف](03-description-resolution-chain.md)
+- [تكامل Groq AI](04-groq-ai-integration.md)
+- [نظام التخزين المؤقت SQLite](05-sqlite-caching-system.md)
+- [واجهة الطرفية](06-terminal-ui.md)
+- [دليل الإعدادات](07-configuration-guide.md)
 - [الصفحة الرئيسية](../index.html)
+
+## نظرة عامة
+
+**Mac Monitor** يلتقط كل عملية تعمل على macOS، يصنفها إلى واحدة من ثلاث فئات (USER_APP، BACKGROUND_SERVICE، SYSTEM_CORE)، ويقدم وصفاً واضحاً باستخدام سلسلة احتياط ذكية:
+
+1. ذاكرة SQLite (فوري)
+2. تجاوزات ثابتة (فوري)
+3. استخراج من المسار (فوري)
+4. Whatis (سريع)
+5. Groq AI (عبر الإنترنت، 14,400 وصف مجاني/يوم)
+6. احتياط عام (ملاذ أخير)
+
+الأداة مصممة لتكون **خفيفة الوزن**، **قادرة على العمل بدون إنترنت**، و**مجانية** — بدون بطاقة ائتمان.
