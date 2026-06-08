@@ -67,6 +67,14 @@
   [dir="rtl"] .docs-lang-toggle { left: auto; right: 60px; }
   [dir="rtl"] .docs-back { right: auto; left: 60px; }
   [dir="rtl"] .markdown-section { direction: rtl; text-align: right; }
+  [dir="rtl"] .markdown-section code,
+  [dir="rtl"] .markdown-section pre,
+  [dir="rtl"] .markdown-section pre code,
+  [dir="rtl"] .markdown-section tt {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed;
+  }
   [dir="rtl"] .sidebar { direction: rtl; }
   [dir="rtl"] .sidebar ul li.active > a { border-right: none; border-left: 2px solid var(--theme-color); }
 
