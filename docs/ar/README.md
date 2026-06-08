@@ -11,7 +11,7 @@
 - [نظام التخزين المؤقت SQLite](05-sqlite-caching-system.md)
 - [واجهة الطرفية](06-terminal-ui.md)
 - [دليل الإعدادات](07-configuration-guide.md)
-- [الصفحة الرئيسية](../index.html)
+- [الصفحة الرئيسية](https://mylhassane.github.io/mac-monitor/)
 
 ## نظرة عامة
 

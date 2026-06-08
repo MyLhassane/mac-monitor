@@ -8,14 +8,16 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
 <style>
   :root {
-    --theme-color: #6ecbf5;
+    --theme-color: #6ecbf5a8;
     --base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --code-font-family: "SF Mono", "Fira Code", "Courier New", monospace;
     --sidebar-width: 18rem;
+    --mm-font-scale: 1;
+    --mm-line-scale: 1;
   }
   body { font-family: var(--base-font-family); }
   .sidebar { background: #f8f9fa; }
-  .sidebar ul li a { color: #333; font-size: 14px; }
+  .sidebar ul li a { color: #333; font-size: 16px; }
   .sidebar ul li a:hover { color: var(--theme-color); }
   .sidebar ul li.active > a { color: var(--theme-color); border-right: 2px solid var(--theme-color); }
   .markdown-section h1 { font-size: 1.8rem; }
@@ -37,7 +39,7 @@
   .sidebar > h1 { text-align: center; margin: 0; }
 
   .sidebar-toggle {
-    background: #6ecbf5; border-radius: 0 6px 6px 0;
+    background: #6ecbf5a8; border-radius: 0 6px 6px 0;
     padding: 10px 12px; z-index: 100;
   }
   .sidebar-toggle span { background: #fff; }
@@ -56,12 +58,20 @@
     text-decoration: none; color: #888; font-weight: 600; cursor: pointer;
   }
   .sidebar-lang-toggle a:hover { color: #333; }
-  .sidebar-lang-toggle a.active { background: #6ecbf5; color: #fff; }
+  .sidebar-lang-toggle a.active { background: #6ecbf5a8; color: #fff; }
   .sidebar-back {
     font-size: 12px; color: #888; text-decoration: none; font-weight: 500; white-space: nowrap;
   }
-  .sidebar-back:hover { color: #6ecbf5; }
+  .sidebar-back:hover { color: #6ecbf5a8; }
   [dir="rtl"] .sidebar-back { white-space: nowrap; }
+  .sidebar-controls { display: flex; align-items: center; gap: 1px; margin: 0 4px; }
+  .sc-btn {
+    background: none; border: none; color: #666; cursor: pointer;
+    font-size: 11px; font-weight: 700; padding: 2px 5px; border-radius: 4px;
+    line-height: 1; font-family: inherit;
+  }
+  .sc-btn:hover { color: #6ecbf5a8; background: #ffffff10; }
+  .sc-sep { width: 1px; height: 14px; background: #2a2a4a; margin: 0 2px; flex-shrink: 0; }
 
   /* ===== RTL sidebar fixes ===== */
   [dir="rtl"] .sidebar-nav { margin-right: 10px; }
@@ -98,7 +108,7 @@
   @media (max-width: 768px) {
     .sidebar { z-index: 200; }
     .sidebar-toggle { z-index: 300; }
-    body.close .sidebar-toggle { background: #6ecbf5; }
+    body.close .sidebar-toggle { background: #6ecbf5a8; }
     [dir="rtl"] .sidebar {
       transform: translateX(300px);
     }
@@ -107,6 +117,95 @@
     }
   [dir="rtl"] .sidebar-toggle { left: auto; right: 0; border-radius: 6px 0 0 6px; }
   }
+
+  /* ===== DARK THEME ===== */
+  ::selection { background: #6ecbf540; color: #fff; }
+  body { background: #0a0a0f; color: #e0e0e0; }
+  .sidebar {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+    border-right: 1px solid #1e1e3a;
+  }
+  .sidebar > h1 a { color: #e0e0e0 !important; }
+  .sidebar ul li a { color: #aaa !important; }
+  .sidebar ul li a:hover { color: #6ecbf5a8 !important; }
+  .sidebar ul li.active > a { color: #6ecbf5a8 !important; border-right-color: #6ecbf5a8; }
+  .content { background: #0a0a0f; }
+  .markdown-section { color: #e0e0e0; }
+  .markdown-section p,
+  .markdown-section li {
+    font-size: calc(1em * var(--mm-font-scale)) !important;
+    line-height: calc(1.6rem * var(--mm-line-scale)) !important;
+  }
+  .markdown-section h1,
+  .markdown-section h2,
+  .markdown-section h3,
+  .markdown-section h4,
+  .markdown-section strong { color: #eee; }
+  .markdown-section a { color: #6ecbf5a8; }
+  .markdown-section code { background: #1a1a2e; color: #e0e0e0; }
+  .markdown-section pre { background: #0d0d1a; }
+  .markdown-section pre code { background: transparent; }
+  .markdown-section th,
+  .markdown-section td { border-color: #1e1e3a; }
+  .markdown-section tr { border-top-color: #1e1e3a; }
+  .markdown-section tr:nth-child(2n) { background: #111122; }
+  .markdown-section blockquote { color: #888; border-left-color: #6ecbf5a8; }
+  .markdown-section p.tip { background: #111122; }
+  .markdown-section .token.cdata,
+  .markdown-section .token.comment,
+  .markdown-section .token.doctype,
+  .markdown-section .token.prolog { color: #666; }
+  .search { border-bottom: 1px solid #1e1e3a; }
+  .search input { background: #0a0a0f; color: #e0e0e0; }
+  .search input::placeholder { color: #666; }
+  .search .search-keyword { color: #6ecbf5a8; }
+  .sidebar-top-bar { border-bottom-color: #1e1e3a; }
+  .sidebar-lang-toggle { background: #1a1a2e; }
+  .sidebar-lang-toggle a { color: #666; }
+  .sidebar-lang-toggle a.active { color: #0a0a0f; }
+  .sidebar-back { color: #888; }
+  .sidebar-back:hover { color: #6ecbf5a8; }
+
+  /* ===== LIGHT THEME ===== */
+  [data-theme="light"] body { background: #fff; color: #34495e; }
+  [data-theme="light"] .sidebar {
+    background: linear-gradient(135deg, #f8f9fa 0%, #eef1f5 100%);
+    border-right-color: #e0e0e0;
+  }
+  [data-theme="light"] .sidebar > h1 a { color: #333 !important; }
+  [data-theme="light"] .sidebar ul li a { color: #555 !important; }
+  [data-theme="light"] .sidebar ul li a:hover { color: #6ecbf5a8 !important; }
+  [data-theme="light"] .sidebar ul li.active > a { color: #6ecbf5a8 !important; border-right-color: #6ecbf5a8; }
+  [data-theme="light"] .content { background: #fff; }
+  [data-theme="light"] .markdown-section { color: #34495e; }
+  [data-theme="light"] .markdown-section h1,
+  [data-theme="light"] .markdown-section h2,
+  [data-theme="light"] .markdown-section h3,
+  [data-theme="light"] .markdown-section h4,
+  [data-theme="light"] .markdown-section strong { color: #2c3e50; }
+  [data-theme="light"] .markdown-section a { color: #6ecbf5a8; }
+  [data-theme="light"] .markdown-section code { background: #f0f0f0; color: #333; }
+  [data-theme="light"] .markdown-section pre { background: #f6f8fa; }
+  [data-theme="light"] .markdown-section pre code { background: transparent; }
+  [data-theme="light"] .markdown-section th,
+  [data-theme="light"] .markdown-section td { border-color: #ddd; }
+  [data-theme="light"] .markdown-section tr { border-top-color: #ccc; }
+  [data-theme="light"] .markdown-section tr:nth-child(2n) { background: #f8f8f8; }
+  [data-theme="light"] .markdown-section blockquote { color: #666; border-left-color: #6ecbf5a8; }
+  [data-theme="light"] .markdown-section p.tip { background: #f8f8f8; }
+  [data-theme="light"] .search { border-bottom-color: #e0e0e0; }
+  [data-theme="light"] .search input { background: #fff; color: #333; }
+  [data-theme="light"] .search input::placeholder { color: #999; }
+  [data-theme="light"] .search .search-keyword { color: #6ecbf5a8; }
+  [data-theme="light"] .sidebar-top-bar { border-bottom-color: #e0e0e0; }
+  [data-theme="light"] .sidebar-lang-toggle { background: #e8e8e8; }
+  [data-theme="light"] .sidebar-lang-toggle a { color: #999; }
+  [data-theme="light"] .sidebar-lang-toggle a.active { color: #fff; background: #6ecbf5a8; }
+  [data-theme="light"] .sidebar-back { color: #999; }
+  [data-theme="light"] .sidebar-back:hover { color: #6ecbf5a8; }
+  [data-theme="light"] .sc-btn { color: #999; }
+  [data-theme="light"] .sc-btn:hover { color: #6ecbf5a8; background: #00000008; }
+  [data-theme="light"] .sc-sep { background: #ddd; }
 </style>
 </head>
 <body>
@@ -132,9 +231,41 @@
     window.location.href = up + 'index.html';
   }
 
+  function getScale(key, def) {
+    return parseFloat(localStorage.getItem('mm-docs-' + key)) || def;
+  }
+  function adjScale(key, delta) {
+    var val = Math.round((getScale(key, 1) + delta) * 10) / 10;
+    val = Math.min(Math.max(val, 0.7), 1.5);
+    if (val === 1) localStorage.removeItem('mm-docs-' + key);
+    else localStorage.setItem('mm-docs-' + key, val);
+    applyScales();
+  }
+  function applyScales() {
+    document.documentElement.style.setProperty('--mm-font-scale', getScale('font-scale', 1));
+    document.documentElement.style.setProperty('--mm-line-scale', getScale('line-scale', 1));
+  }
+
+  function getTheme() {
+    return localStorage.getItem('mm-docs-theme') || 'dark';
+  }
+  function toggleTheme() {
+    var t = getTheme() === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('mm-docs-theme', t);
+    document.documentElement.setAttribute('data-theme', t);
+    var btn = document.querySelector('.sc-theme-btn');
+    if (btn) {
+      var isAr = document.documentElement.dir === 'rtl';
+      btn.textContent = t === 'dark' ? '\u2600\ufe0f' : '\ud83c\udf19';
+      btn.title = isAr ? (t === 'dark' ? '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0641\u0627\u062a\u062d' : '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u063a\u0627\u0645\u0642') : (t === 'dark' ? 'Light mode' : 'Dark mode');
+    }
+  }
+
   (function() {
     document.documentElement.lang = currentLang;
     document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.setAttribute('data-theme', getTheme());
+    applyScales();
 
     window.$docsify = {
       name: 'Mac Monitor',
@@ -185,7 +316,20 @@
             backBtn.onclick = function() { goHome(); return false; };
             backBtn.textContent = isAr ? '\u2192 \u0639\u0648\u062f\u0629' : '\u2190 Back';
 
+            var theme = getTheme();
+            var controls = document.createElement('div');
+            controls.className = 'sidebar-controls';
+            controls.innerHTML =
+              '<button class="sc-btn" onclick="adjScale(\'font-scale\',-0.1)" title="' + (isAr ? '\u062a\u0635\u063a\u064a\u0631 \u0627\u0644\u062e\u0637' : 'Smaller text') + '">A\u207b</button>' +
+              '<button class="sc-btn" onclick="adjScale(\'font-scale\',0.1)" title="' + (isAr ? '\u062a\u0643\u0628\u064a\u0631 \u0627\u0644\u062e\u0637' : 'Larger text') + '">A\u207a</button>' +
+              '<span class="sc-sep"></span>' +
+              '<button class="sc-btn" onclick="adjScale(\'line-scale\',-0.1)" title="' + (isAr ? '\u062a\u0642\u0631\u064a\u0628 \u0627\u0644\u0623\u0633\u0637\u0631' : 'Tighter lines') + '">\u00b6\u207b</button>' +
+              '<button class="sc-btn" onclick="adjScale(\'line-scale\',0.1)" title="' + (isAr ? '\u062a\u0628\u0627\u0639\u062f \u0627\u0644\u0623\u0633\u0637\u0631' : 'Wider lines') + '">\u00b6\u207a</button>' +
+              '<span class="sc-sep"></span>' +
+              '<button class="sc-btn sc-theme-btn" onclick="toggleTheme(); return false;" title="' + (isAr ? (theme === 'dark' ? '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0641\u0627\u062a\u062d' : '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u063a\u0627\u0645\u0642') : (theme === 'dark' ? 'Light mode' : 'Dark mode')) + '">' + (theme === 'dark' ? '\u2600\ufe0f' : '\ud83c\udf19') + '</button>';
+
             topBar.appendChild(backBtn);
+            topBar.appendChild(controls);
             topBar.appendChild(langToggle);
 
             sidebar.insertBefore(topBar, appName);
