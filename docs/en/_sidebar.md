@@ -1,3 +1,7 @@
+[🌐 English](?lang=en) | [🌐 العربية](?lang=ar)
+
+---
+
 - [Home](README.md)
 - [01 — Architecture](01-architecture.md)
 - [02 — Snapshot & Classification](02-snapshot-classification.md)

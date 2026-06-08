@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mac Monitor — Documentation</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/themes/vue.css">
 <style>
   :root {
     --theme-color: #6ecbf5;
@@ -28,63 +28,67 @@
   .markdown-section th, .markdown-section td { padding: 10px 14px; }
   .markdown-section blockquote { color: #666; border-left: 4px solid var(--theme-color); }
   .app-name-link { font-weight: 700; font-size: 1.2rem; color: #333 !important; }
+  .sidebar-nav { margin-top: 0; }
+  .sidebar > h1 { text-align: center; margin: 0; }
 
-  .lang-bar {
-    display: flex; gap: 4px; justify-content: center; padding: 12px 0 4px;
-    border-bottom: 1px solid #eee; margin-bottom: 8px;
+  /* ===== language toggle in sidebar ===== */
+  .lang-switch {
+    display: flex; gap: 4px; justify-content: center;
+    padding: 12px 15px 4px; border-bottom: 1px solid #eee;
   }
-  .lang-bar a {
+  .lang-switch a {
     font-size: 12px; padding: 3px 10px; border-radius: 12px;
     text-decoration: none; color: #888; font-weight: 600;
   }
-  .lang-bar a.active { background: #6ecbf5; color: #fff; }
-  .lang-bar a:hover:not(.active) { color: #333; }
+  .lang-switch a.active { background: #6ecbf5; color: #fff; }
+  .lang-switch a:hover:not(.active) { color: #333; }
 
-  .sidebar-nav { margin-top: 0; }
-  .sidebar > h1 { text-align: center; margin: 0; }
-  .sidebar-toggle { display: none; }
+  /* ===== sidebar hamburger ===== */
+  .sidebar-toggle {
+    background: #6ecbf5; border-radius: 0 6px 6px 0;
+    padding: 10px 12px; z-index: 100;
+  }
+  .sidebar-toggle span { background: #fff; }
+  .sidebar-toggle:hover { background: #5ab8e8; }
 
-  /* RTL support for Arabic */
+  /* ===== RTL ===== */
   [dir="rtl"] .markdown-section { direction: rtl; text-align: right; }
   [dir="rtl"] .sidebar { direction: rtl; }
   [dir="rtl"] .sidebar ul li.active > a { border-right: none; border-left: 2px solid var(--theme-color); }
+
+  /* ===== mobile ===== */
+  @media (max-width: 768px) {
+    .sidebar { z-index: 200; }
+  }
 </style>
 </head>
 <body>
 <div id="app"></div>
 
 <script>
-  window.$docsify = {
-    name: 'Mac Monitor',
-    repo: 'https://github.com/MyLhassane/mac-monitor',
-    basePath: window.location.search.includes('lang=ar') ? 'ar/' : 'en/',
-    loadSidebar: true,
-    loadNavbar: false,
-    coverpage: false,
-    autoHeader: false,
-    maxLevel: 3,
-    subMaxLevel: 2,
-    search: {
-      maxAge: 86400000,
-      paths: 'auto',
-      placeholder: 'Search docs...',
-      noData: 'No results!',
-    },
-    formatUpdated: '{YYYY-MM-DD}',
-    plugins: [
-      function(hook, vm) {
-        hook.afterEach(function(html) {
-          const lang = vm.route.path.includes('/ar/') ? 'ar' : 'en';
-          document.documentElement.lang = lang;
-          document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-          return html;
-        });
-      }
-    ],
-  };
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var saved = localStorage.getItem('mm-docs-lang');
+    var lang = params.get('lang') || saved || 'en';
+    localStorage.setItem('mm-docs-lang', lang);
+
+    window.$docsify = {
+      name: 'Mac Monitor',
+      repo: 'https://github.com/MyLhassane/mac-monitor',
+      basePath: lang === 'ar' ? 'ar/' : 'en/',
+      loadSidebar: true,
+      loadNavbar: false,
+      coverpage: false,
+      autoHeader: false,
+      maxLevel: 3,
+      subMaxLevel: 2,
+      search: 'auto',
+      formatUpdated: '{YYYY-MM-DD}',
+    };
+  })();
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/docsify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/plugins/search.min.js"></script>
 </body>
 </html>
