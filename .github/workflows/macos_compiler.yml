@@ -1,0 +1,38 @@
+name: Build MacMonitorApp (Universal Binary)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'MacMonitorApp/**'
+      - '.github/workflows/macos_compiler.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Build universal binary
+        run: |
+          cd MacMonitorApp
+          swift build -c release --arch x86_64 --arch arm64
+
+      - name: Locate binary
+        run: |
+          cd MacMonitorApp
+          BIN_PATH=$(swift build -c release --arch x86_64 --arch arm64 --show-bin-path)
+          echo "Binary at: $BIN_PATH"
+          mkdir -p build-dist
+          cp -r "$BIN_PATH"/* build-dist/ 2>/dev/null || true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacMonitorApp-Universal
+          path: MacMonitorApp/build-dist/
