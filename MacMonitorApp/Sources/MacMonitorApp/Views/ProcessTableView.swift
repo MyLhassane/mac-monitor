@@ -4,10 +4,21 @@ class ProcessTableView: NSView {
     private let tableView = NSTableView()
     private let scrollView = NSScrollView()
     private var processes: [(pid: Int, name: String, cpu: Double, mem: Double, desc: String)] = [
-        (1234, "kernel_task", 12.5, 0.2, "CPU thermal management"),
-        (5678, "Finder", 1.2, 3.1, "File manager GUI"),
-        (9101, "Terminal", 0.8, 0.9, "Command line interface"),
-        (1121, "Dock", 0.3, 1.5, "Application dock"),
+        (0,    "kernel_task",      12.5, 0.2, "CPU thermal management"),
+        (1,    "launchd",           0.0, 0.5, "Service manager"),
+        (94,   "WindowServer",      8.2, 1.8, "Window compositor"),
+        (112,  "usbd",              0.0, 0.1, "USB device handling"),
+        (208,  "opendirectoryd",    0.0, 0.3, "Directory services"),
+        (389,  "systemstats",       1.5, 0.4, "System statistics daemon"),
+        (444,  "airportd",          0.0, 0.2, "Wi-Fi management"),
+        (456,  "WiFiAgent",         0.3, 1.1, "Wi-Fi status menu"),
+        (478,  "thermalmonitord",   2.1, 0.3, "Thermal monitoring"),
+        (5678, "Finder",            1.2, 3.1, "File manager GUI"),
+        (9101, "Terminal",          0.8, 0.9, "Command line interface"),
+        (8877, "Safari",           14.3, 7.2, "Web browser"),
+        (3344, "Music",             0.0, 4.5, "Media player"),
+        (1121, "Dock",              0.3, 1.5, "Application dock"),
+        (2200, "NotificationCenter",0.1, 0.8, "Notifications UI"),
     ]
 
     override init(frame frameRect: NSRect) {
@@ -56,6 +67,11 @@ class ProcessTableView: NSView {
             scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+    }
+
+    override var intrinsicContentSize: NSSize {
+        let rowArea = CGFloat(processes.count) * tableView.rowHeight + (tableView.headerView?.frame.height ?? 20)
+        return NSSize(width: NSView.noIntrinsicMetric, height: min(rowArea + 4, 480))
     }
 
     @objc func doubleClick(_ sender: Any?) { killProcess(sender) }

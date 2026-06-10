@@ -3,8 +3,11 @@ import Cocoa
 class PlaceholderView: NSView {
     private let label = NSTextField(labelWithString: "")
 
+    override var intrinsicContentSize: NSSize { NSSize(width: 412, height: 480) }
+
     init(label text: String) {
         super.init(frame: .zero)
+        wantsLayer = true
         label.stringValue = text
         label.alignment = .center
         label.textColor = .secondaryLabelColor
