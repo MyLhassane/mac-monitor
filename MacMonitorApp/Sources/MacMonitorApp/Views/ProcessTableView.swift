@@ -29,20 +29,22 @@ class ProcessTableView: NSView {
     required init?(coder: NSCoder) { nil }
 
     private func buildUI() {
-        let cols: [(id: String, title: String, width: CGFloat)] = [
-            ("pid", "PID", 50),
-            ("name", "Name", 140),
-            ("cpu", "CPU%", 50),
-            ("mem", "MEM%", 50),
-            ("desc", "Description", 120),
+        let cols: [(id: String, title: String, width: CGFloat, minWidth: CGFloat)] = [
+            ("pid", "PID", 50, 40),
+            ("name", "Name", 140, 60),
+            ("cpu", "CPU%", 50, 35),
+            ("mem", "MEM%", 50, 35),
+            ("desc", "Description", 120, 60),
         ]
         for col in cols {
             let tc = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(col.id))
             tc.title = col.title
             tc.width = col.width
-            tc.minWidth = col.width
+            tc.minWidth = col.minWidth
+            tc.maxWidth = 600
             tableView.addTableColumn(tc)
         }
+        tableView.columnResizingType = .standard
 
         tableView.dataSource = self
         tableView.delegate = self
