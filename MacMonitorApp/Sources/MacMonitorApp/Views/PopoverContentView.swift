@@ -32,7 +32,7 @@ class PopoverContentView: NSView {
 
 extension NSTabViewItem {
     convenience init(identifier: String, label: String, view: NSView) {
-        self.init(identifier: identifier as NSTabViewItem.Identifier)
+        self.init(identifier: identifier)
         self.label = label
         self.view = view
         view.autoresizingMask = [.width, .height]
