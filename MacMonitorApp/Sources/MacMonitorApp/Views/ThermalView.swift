@@ -22,3 +22,10 @@ class PlaceholderView: NSView {
 
     required init?(coder: NSCoder) { nil }
 }
+
+class ThermalView: PlaceholderView {
+    init() {
+        super.init(label: "Thermal sensors (SMC) — coming soon")
+    }
+    required init?(coder: NSCoder) { nil }
+}
